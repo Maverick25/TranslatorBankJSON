@@ -19,7 +19,7 @@ public class Send
 {
     // changes to come!!!!!!!!!!!!!!!!!!!
     
-    private static final String TASK_QUEUE_NAME = "queue_bankJSON";
+    private static final String EXCHANGE_NAME = "cphbusiness.bankJSON";
     
     public static void sendMessage(String message) throws IOException 
     {
@@ -30,11 +30,11 @@ public class Send
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
         
-        channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
+        channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
         
-        channel.basicPublish( "", TASK_QUEUE_NAME, 
-                MessageProperties.PERSISTENT_TEXT_PLAIN,
-                message.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, "" , null, message.getBytes());
+        
+        System.out.println(" [x] Sent '" + message + "'");
         
         channel.close();
         connection.close();
