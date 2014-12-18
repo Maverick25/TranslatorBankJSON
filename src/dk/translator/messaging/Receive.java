@@ -36,9 +36,13 @@ public class Receive
         channel.exchangeDeclare(EXCHANGE_NAME, "direct");
         String queueName = channel.queueDeclare().getQueue();
         
-        String good = "good";
+        String[] types = new String[]{"high","medium","low","miserable"};
         
-        channel.queueBind(queueName, EXCHANGE_NAME, good);
+        for(String oneType : types)
+        {    
+            channel.queueBind(queueName, EXCHANGE_NAME, oneType);
+        }
+        
 //        channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
@@ -47,7 +51,7 @@ public class Receive
         QueueingConsumer consumer = new QueueingConsumer(channel);
         channel.basicConsume(queueName, true, consumer);
 
-        HashMap<String,Object> returnObjects = new HashMap<String,Object>();
+        HashMap<String,Object> returnObjects = new HashMap<>();
         
         returnObjects.put("channel",channel);
         returnObjects.put("consumer",consumer);

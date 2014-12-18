@@ -38,24 +38,12 @@ public class TranslateToBankJSON
           QueueingConsumer.Delivery delivery = consumer.nextDelivery();
           String message = new String(delivery.getBody());
           
-          try
-          {
-//          messageDTO = gson.fromJson(message, ComplexMessageDTO.class);
-          
-//          loanRequestDTO = messageDTO.getDto();
-//          selectedBanks = messageDTO.getBanks();
-          
-//          System.out.println(loanRequestDTO.toString());
-//          System.out.println(selectedBanks.get(0));
-          }
-          catch(Exception e)
-          {
-              
-          }
-          
-//          sendMessage(loanRequestDTO);
+          String routingKey = delivery.getEnvelope().getRoutingKey();
 
+          System.out.println(" [x] Received '" + routingKey + "':'" + message + "'");
+          
           channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+
         }
         
     }
