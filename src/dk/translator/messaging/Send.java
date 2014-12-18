@@ -5,6 +5,7 @@
  */
 package dk.translator.messaging;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -21,7 +22,7 @@ public class Send
     
     private static final String EXCHANGE_NAME = "cphbusiness.bankJSON";
     
-    public static void sendMessage(String message) throws IOException 
+    public static void sendMessage(String message, AMQP.BasicProperties props) throws IOException 
     {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("datdb.cphbusiness.dk");
@@ -32,7 +33,7 @@ public class Send
         
         channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
         
-        channel.basicPublish(EXCHANGE_NAME, "" , null, message.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, "" , props, message.getBytes());
         
         System.out.println(" [x] Sent '" + message + "'");
         
