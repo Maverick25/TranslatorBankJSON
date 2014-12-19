@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.QueueingConsumer;
+import dk.translator.dto.BankJSONLoanRequest;
 import dk.translator.dto.LoanRequestDTO;
 import dk.translator.messaging.Receive;
 import dk.translator.messaging.Send;
@@ -35,6 +36,7 @@ public class TranslateToBankJSON
         Channel channel = (Channel) objects.get("channel");
         
         LoanRequestDTO loanRequest;
+        BankJSONLoanRequest bankJSONLoanRequest;
 //        List<String> selectedBanks;
         
         while (true) 
@@ -51,15 +53,23 @@ public class TranslateToBankJSON
           
           loanRequest = gson.fromJson(message, LoanRequestDTO.class);
           
+          StringBuilder sb = new StringBuilder(loanRequest.getSsn());
+          sb.deleteCharAt(6);
+          long ssnJSON = Long.parseLong(sb.toString());
+          
+          bankJSONLoanRequest = new BankJSONLoanRequest(ssnJSON, loanRequest.getCreditScore(), (int) loanRequest.getLoanAmount(), loanRequest.getLoanDuration());
+            System.out.println(bankJSONLoanRequest.toString());
+            sendMessage(bankJSONLoanRequest, replyProps);
+          
           channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 
         }
         
     }
     
-    public static void sendMessage(LoanRequestDTO loanRequest, AMQP.BasicProperties props) throws IOException
+    public static void sendMessage(BankJSONLoanRequest bankJSONLoanRequest, AMQP.BasicProperties props) throws IOException
     {
-        String message = gson.toJson(loanRequest);
+        String message = gson.toJson(bankJSONLoanRequest);
         
         Send.sendMessage(message, props);
     }   

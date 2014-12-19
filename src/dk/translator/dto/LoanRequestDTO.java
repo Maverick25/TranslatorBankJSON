@@ -24,6 +24,14 @@ public class LoanRequestDTO implements Serializable
     {
     }
  
+    public LoanRequestDTO(String ssn, int creditScore, double loanAmount, int loanDuration)
+    {
+        this.ssn = ssn;
+        this.creditScore = creditScore;
+        this.loanAmount = loanAmount;
+        this.loanDuration = loanDuration;       
+    }
+    
     public LoanRequestDTO(String ssn, double loanAmount, int loanDuration, int creditScore)
     {
         this.ssn = ssn;
