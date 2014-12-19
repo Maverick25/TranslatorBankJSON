@@ -18,8 +18,6 @@ import java.io.IOException;
  */
 public class Send 
 {
-    // changes to come!!!!!!!!!!!!!!!!!!!
-    
     private static final String EXCHANGE_NAME = "cphbusiness.bankJSON";
     
     public static void sendMessage(String message, AMQP.BasicProperties props) throws IOException 
