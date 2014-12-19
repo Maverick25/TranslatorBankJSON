@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.QueueingConsumer;
-import dk.translator.dto.BankJSONLoanRequest;
+import dk.translator.dto.ConvertedLoanRequestDTO;
 import dk.translator.dto.LoanRequestDTO;
 import dk.translator.messaging.Receive;
 import dk.translator.messaging.Send;
@@ -36,8 +36,7 @@ public class TranslateToBankJSON
         Channel channel = (Channel) objects.get("channel");
         
         LoanRequestDTO loanRequest;
-        BankJSONLoanRequest bankJSONLoanRequest;
-//        List<String> selectedBanks;
+        ConvertedLoanRequestDTO convertedLoanRequestDTO;
         
         while (true) 
         {
@@ -55,11 +54,13 @@ public class TranslateToBankJSON
           
           StringBuilder sb = new StringBuilder(loanRequest.getSsn());
           sb.deleteCharAt(6);
-          long ssnJSON = Long.parseLong(sb.toString());
+          long convertedSsn = Long.parseLong(sb.toString());
           
-          bankJSONLoanRequest = new BankJSONLoanRequest(ssnJSON, loanRequest.getCreditScore(), (int) loanRequest.getLoanAmount(), loanRequest.getLoanDuration());
-            System.out.println(bankJSONLoanRequest.toString());
-            sendMessage(bankJSONLoanRequest, replyProps);
+          convertedLoanRequestDTO = new ConvertedLoanRequestDTO(convertedSsn, loanRequest.getCreditScore(), (int) loanRequest.getLoanAmount(), loanRequest.getLoanDuration());
+            
+          System.out.println("Converted: "+convertedLoanRequestDTO.toString());
+            
+          sendMessage(convertedLoanRequestDTO, replyProps);
           
           channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 
@@ -67,9 +68,9 @@ public class TranslateToBankJSON
         
     }
     
-    public static void sendMessage(BankJSONLoanRequest bankJSONLoanRequest, AMQP.BasicProperties props) throws IOException
+    public static void sendMessage(ConvertedLoanRequestDTO convertedLoanRequestDTO, AMQP.BasicProperties props) throws IOException
     {
-        String message = gson.toJson(bankJSONLoanRequest);
+        String message = gson.toJson(convertedLoanRequestDTO);
         
         Send.sendMessage(message, props);
     }   

@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Jon
  */
-public class BankJSONLoanRequest implements Serializable 
+public class ConvertedLoanRequestDTO implements Serializable 
 {
     private static final long serialVersionUID = 1L;
    
@@ -20,10 +20,10 @@ public class BankJSONLoanRequest implements Serializable
     private int loanDuration;
     private int creditScore;
     
-    public BankJSONLoanRequest() {
+    public ConvertedLoanRequestDTO() {
     }
 
-    public BankJSONLoanRequest(long ssn, double loanAmount, int loanDuration, int creditScore) {
+    public ConvertedLoanRequestDTO(long ssn, double loanAmount, int loanDuration, int creditScore) {
         this.ssn = ssn;        
         this.loanAmount = loanAmount;
         this.loanDuration = loanDuration;
