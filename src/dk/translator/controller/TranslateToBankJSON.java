@@ -35,7 +35,7 @@ public class TranslateToBankJSON
         QueueingConsumer consumer = (QueueingConsumer) objects.get("consumer");
         Channel channel = (Channel) objects.get("channel");
         
-        LoanRequestDTO loanRequest;
+        LoanRequestDTO loanRequestDTO;
         ConvertedLoanRequestDTO convertedLoanRequestDTO;
         
         while (true) 
@@ -50,14 +50,14 @@ public class TranslateToBankJSON
 
           System.out.println(" [x] Received '" + routingKey + "':'" + message + "'");
           
-          loanRequest = gson.fromJson(message, LoanRequestDTO.class);
+          loanRequestDTO = gson.fromJson(message, LoanRequestDTO.class);
           
-          StringBuilder sb = new StringBuilder(loanRequest.getSsn());
+          StringBuilder sb = new StringBuilder(loanRequestDTO.getSsn());
           sb.deleteCharAt(6);
           long convertedSsn = Long.parseLong(sb.toString());
           
-          convertedLoanRequestDTO = new ConvertedLoanRequestDTO(convertedSsn, loanRequest.getCreditScore(), (int) loanRequest.getLoanAmount(), loanRequest.getLoanDuration());
-            
+          convertedLoanRequestDTO = new ConvertedLoanRequestDTO(convertedSsn, loanRequestDTO.getLoanAmount(), loanRequestDTO.getLoanDuration(), loanRequestDTO.getCreditScore());
+  
           System.out.println("Converted: "+convertedLoanRequestDTO.toString());
             
           sendMessage(convertedLoanRequestDTO, replyProps);
