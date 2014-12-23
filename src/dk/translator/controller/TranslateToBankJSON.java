@@ -15,7 +15,6 @@ import dk.translator.messaging.Receive;
 import dk.translator.messaging.Send;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -56,7 +55,7 @@ public class TranslateToBankJSON
           sb.deleteCharAt(6);
           long convertedSsn = Long.parseLong(sb.toString());
           
-          convertedLoanRequestDTO = new ConvertedLoanRequestDTO(convertedSsn, loanRequestDTO.getLoanAmount(), loanRequestDTO.getLoanDuration(), loanRequestDTO.getCreditScore());
+          convertedLoanRequestDTO = new ConvertedLoanRequestDTO(convertedSsn, loanRequestDTO.getCreditScore(), loanRequestDTO.getLoanAmount(), loanRequestDTO.getLoanDuration());
   
           System.out.println("Converted: "+convertedLoanRequestDTO.toString());
             

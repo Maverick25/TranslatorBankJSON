@@ -16,18 +16,19 @@ public class ConvertedLoanRequestDTO implements Serializable
     private static final long serialVersionUID = 1L;
    
     private long ssn;
+    private int creditScore;
     private double loanAmount;
     private int loanDuration;
-    private int creditScore;
     
     public ConvertedLoanRequestDTO() {
     }
 
-    public ConvertedLoanRequestDTO(long ssn, double loanAmount, int loanDuration, int creditScore) {
+    public ConvertedLoanRequestDTO(long ssn, int creditScore, double loanAmount, int loanDuration) {
         this.ssn = ssn;        
+        this.creditScore = creditScore;
         this.loanAmount = loanAmount;
         this.loanDuration = loanDuration;
-        this.creditScore = creditScore;
+        
     }
 
     public long getSsn() {
